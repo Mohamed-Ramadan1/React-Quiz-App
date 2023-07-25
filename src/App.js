@@ -4,10 +4,15 @@ import Main from "./components/Main";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
 import StartScreen from "./components/StartScreen;";
+import Questions from "./components/Questions";
+import { act } from "react-dom/test-utils";
 
 const initialState = {
   questions: [],
   status: "loading",
+  index: 0,
+  answer: null,
+  points: 0,
 };
 
 const reducer = (state, action) => {
@@ -16,12 +21,28 @@ const reducer = (state, action) => {
       return { ...state, questions: action.payload, status: "ready" };
     case "dataFaild":
       return { ...state, status: "error" };
+
+    case "start":
+      return { ...state, status: "active" };
+    case "newAnser":
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payload,
+        pointes:
+          action.payload === question.correctOption
+            ? state.pointes + question.pointes
+            : state.pointes,
+      };
     default:
       return state;
   }
 };
 function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const numQuestions = questions.length;
   useEffect(() => {
     fetch("http://localhost:8000/questions")
@@ -35,7 +56,16 @@ function App() {
       <Main>
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {status === "ready" && <StartScreen numQuestions={numQuestions} />}
+        {status === "ready" && (
+          <StartScreen dispatch={dispatch} numQuestions={numQuestions} />
+        )}
+        {status === "active" && (
+          <Questions
+            question={questions[index]}
+            dispatch={dispatch}
+            answer={answer}
+          />
+        )}
       </Main>
     </div>
   );
