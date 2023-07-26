@@ -20,7 +20,6 @@ const Options = ({ question, dispatch, answer }) => {
           {option}
         </button>
       ))}
-      {/* <Options question={question} dispatch={dispatch} answer={answer} /> */}
     </div>
   );
 };

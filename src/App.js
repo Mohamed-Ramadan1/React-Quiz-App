@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Loader from "./components/Loader";
@@ -7,6 +7,7 @@ import StartScreen from "./components/StartScreen;";
 import Questions from "./components/Questions";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
+import FinsheScreen from "./components/FinsheScreen";
 
 const initialState = {
   questions: [],
@@ -14,6 +15,7 @@ const initialState = {
   index: 0,
   answer: null,
   points: 0,
+  heightscore: 0,
 };
 
 const reducer = (state, action) => {
@@ -30,13 +32,21 @@ const reducer = (state, action) => {
       return {
         ...state,
         answer: action.payload,
-        pointes:
+        points:
           action.payload === question.correctOption
             ? state.points + question.points
             : state.points,
       };
+
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
+    case "finshed":
+      return {
+        ...state,
+        status: "finshed",
+        heightscore:
+          state.pointes > state.heightscore ? state.pointes : state.heightscore,
+      };
     default:
       return state;
   }
@@ -83,8 +93,16 @@ function App() {
               dispatch={dispatch}
               answer={answer}
             />
-            <NextButton dispatch={dispatch} answer={answer} />
+            <NextButton
+              dispatch={dispatch}
+              answer={answer}
+              index={index}
+              numQuestions={numQuestions}
+            />
           </>
+        )}
+        {status === "finshed" && (
+          <FinsheScreen points={points} maxPossiblePoints={maxPossiblePoints} />
         )}
       </Main>
     </div>
