@@ -45,17 +45,21 @@ const reducer = (state, action) => {
         ...state,
         status: "finshed",
         heightscore:
-          state.pointes > state.heightscore ? state.pointes : state.heightscore,
+          state.points > state.heightscore ? state.points : state.heightscore,
+      };
+    case "restart":
+      return {
+        ...initialState,
+        questions: state.questions,
+        status: "ready",
       };
     default:
       return state;
   }
 };
 function App() {
-  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answer, points, heightscore }, dispatch] =
+    useReducer(reducer, initialState);
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce(
     (prev, current) => prev + current.points,
@@ -102,7 +106,12 @@ function App() {
           </>
         )}
         {status === "finshed" && (
-          <FinsheScreen points={points} maxPossiblePoints={maxPossiblePoints} />
+          <FinsheScreen
+            dispatch={dispatch}
+            points={points}
+            maxPossiblePoints={maxPossiblePoints}
+            heightscore={heightscore}
+          />
         )}
       </Main>
     </div>
