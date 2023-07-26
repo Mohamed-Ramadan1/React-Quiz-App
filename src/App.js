@@ -10,7 +10,7 @@ import Progress from "./components/Progress";
 import FinsheScreen from "./components/FinsheScreen";
 import Timer from "./components/Timer";
 import Footer from "./components/Footer";
-
+const SECS_PER_QUESTION = 30;
 const initialState = {
   questions: [],
   status: "loading",
@@ -29,7 +29,11 @@ const reducer = (state, action) => {
       return { ...state, status: "error" };
 
     case "start":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
     case "newAnser":
       const question = state.questions.at(state.index);
       return {
