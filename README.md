@@ -11,7 +11,7 @@ git clone https://github.com/Mohamed-Ramadan1/React-Quiz-App.git
 
 2-Install the project dependencies by running: npm install
 
-3-Start the local development server: npm run server
+3-Start the local development server(Facke-backend(json-server)): npm run server
 
 4- Finally, start the application: npm start
 
